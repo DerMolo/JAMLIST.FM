@@ -1,0 +1,520 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== Section 1: Users, Profiles, Settings, Notifications ====================
+
+model User {
+  id                    String                  @id @default(cuid())
+  email                 String                  @unique
+  passwordHash          String
+  spotifyId             String?                 @unique
+  spotifyAccessToken    String?
+  spotifyRefreshToken   String?
+  spotifyTokenExpiresAt DateTime?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  // Relations
+  profile               UserProfile?
+  settings              UserSettings?
+  notifications         Notification[]
+  notificationPrefs     NotificationPreference?
+  activityLogs          ActivityLog[]
+  playlists             InternalPlaylist[]
+  contributions         PlaylistContributor[]
+  friendshipsAsUserA    Friendship[]            @relation("UserAFriendships")
+  friendshipsAsUserB    Friendship[]            @relation("UserBFriendships")
+  stats                 UserStats?
+  tasteProfile          TasteProfile?
+  comments              PlaylistComment[]
+  ratings               PlaylistRating[]
+  likes                 PlaylistLike[]
+  trackNotes            TrackNote[]
+  pullRequestsCreated   PullRequest[]           @relation("PRCreator")
+  pullRequestsReceived  PullRequest[]           @relation("PROwner")
+  branches              PlaylistBranch[]
+}
+
+model UserProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  displayName     String?
+  bio             String?
+  avatarUrl       String?
+  bannerUrl       String?
+  dateOfBirth     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserSettings {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  theme           String   @default("light") // "light" or "dark"
+  jsonSettings    Json?    // Flexible settings storage
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id              String          @id @default(cuid())
+  userId          String
+  type            NotificationType
+  title           String
+  message         String
+  isRead          Boolean         @default(false)
+  relatedId       String?         // ID of related entity (PR, comment, etc)
+  createdAt       DateTime        @default(now())
+  
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, isRead])
+}
+
+enum NotificationType {
+  PR_OPENED
+  PR_APPROVED
+  PR_REJECTED
+  COMMENT_RECEIVED
+  RATING_RECEIVED
+  LIKE_RECEIVED
+  FRIEND_REQUEST
+  PLAYLIST_UPDATED
+  FORK_ALERT
+  COMMUNITY_ALERT
+}
+
+model NotificationPreference {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  prEvents              Boolean  @default(true)
+  directMessages        Boolean  @default(true)
+  receivedComments      Boolean  @default(true)
+  outgoingPRStatus      Boolean  @default(true)
+  communityAlerts       Boolean  @default(true)
+  forkAlerts            Boolean  @default(true)
+  friendRequests        Boolean  @default(true)
+  playlistUpdates       Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id              String   @id @default(cuid())
+  userId          String
+  action          String   // "created_playlist", "submitted_pr", "commented", etc
+  entityType      String?  // "playlist", "pr", "comment"
+  entityId        String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, createdAt])
+}
+
+model Friendship {
+  id              String          @id @default(cuid())
+  userAId         String
+  userBId         String
+  status          FriendshipStatus @default(PENDING)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  userA           User            @relation("UserAFriendships", fields: [userAId], references: [id], onDelete: Cascade)
+  userB           User            @relation("UserBFriendships", fields: [userBId], references: [id], onDelete: Cascade)
+  
+  @@unique([userAId, userBId])
+  @@index([userAId])
+  @@index([userBId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+// ==================== Section 2: Playlists, Tracks, PR Workflow ====================
+
+model InternalPlaylist {
+  id              String                @id @default(cuid())
+  name            String
+  description     String?
+  ownerId         String
+  spotifyId       String?               @unique
+  imageUrl        String?
+  isPublic        Boolean               @default(false)
+  isCollaborative Boolean               @default(false)
+  version         Int                   @default(1)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  // Sync state tracking - stores the last synced state from Spotify
+  // This allows us to detect what changed on Spotify vs what changed locally
+  lastSyncedAt      DateTime?             // When we last synced with Spotify
+  lastSyncedName    String?               // Name at last sync
+  lastSyncedDesc    String?               // Description at last sync  
+  lastSyncedTracks  Json?                 // Array of spotify track IDs at last sync
+  
+  // Forking support
+  forkedFromId    String?
+  forkedFrom      InternalPlaylist?     @relation("PlaylistForks", fields: [forkedFromId], references: [id], onDelete: SetNull)
+  forks           InternalPlaylist[]    @relation("PlaylistForks")
+  
+  owner           User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  tracks          PlaylistTrack[]
+  contributors    PlaylistContributor[]
+  comments        PlaylistComment[]
+  ratings         PlaylistRating[]
+  likes           PlaylistLike[]
+  trackNotes      TrackNote[]
+  pullRequests    PullRequest[]
+  stats           PlaylistStats?
+  profile         PlaylistProfile?
+  branches        PlaylistBranch[]
+  
+  @@index([ownerId])
+  @@index([isPublic])
+  @@index([forkedFromId])
+}
+
+model InternalTrack {
+  id              String          @id @default(cuid())
+  spotifyId       String          @unique
+  title           String
+  artist          String
+  album           String?
+  duration        Int             // in seconds
+  imageUrl        String?
+  previewUrl      String?
+  createdAt       DateTime        @default(now())
+  
+  playlists       PlaylistTrack[]
+  notes           TrackNote[]
+  audioFeatures   SpotifyAudioFeatures?
+  branchTracks    BranchTrack[]
+}
+
+model PlaylistTrack {
+  id              String            @id @default(cuid())
+  playlistId      String
+  trackId         String
+  position        Int
+  addedAt         DateTime          @default(now())
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  track           InternalTrack     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  
+  @@unique([playlistId, trackId])
+  @@index([playlistId, position])
+}
+
+model PlaylistContributor {
+  id              String            @id @default(cuid())
+  playlistId      String
+  userId          String
+  role            ContributorRole   @default(COLLABORATOR)
+  addedAt         DateTime          @default(now())
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([playlistId, userId])
+  @@index([userId])
+}
+
+enum ContributorRole {
+  OWNER
+  COLLABORATOR
+  VIEWER
+}
+
+model PlaylistComment {
+  id              String            @id @default(cuid())
+  playlistId      String
+  userId          String
+  content         String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([playlistId])
+  @@index([userId])
+}
+
+model PlaylistRating {
+  id              String            @id @default(cuid())
+  playlistId      String
+  userId          String
+  rating          Int               // 1-5 stars
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([playlistId, userId])
+  @@index([playlistId])
+}
+
+model PlaylistLike {
+  id              String            @id @default(cuid())
+  playlistId      String
+  userId          String
+  createdAt       DateTime          @default(now())
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([playlistId, userId])
+  @@index([playlistId])
+}
+
+model TrackNote {
+  id              String            @id @default(cuid())
+  playlistId      String
+  trackId         String
+  userId          String
+  content         String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  track           InternalTrack     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([playlistId])
+  @@index([trackId])
+}
+
+// ==================== Branch System ====================
+
+model PlaylistBranch {
+  id              String            @id @default(cuid())
+  playlistId      String
+  ownerId         String            // User who created this branch
+  name            String            // Branch name e.g. "My Custom Order"
+  description     String?
+  spotifyId       String?           @unique // If synced to user's own Spotify playlist
+  status          BranchStatus      @default(ACTIVE)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  owner           User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  tracks          BranchTrack[]
+  pullRequest     PullRequest?      @relation("BranchPR")
+  
+  @@unique([playlistId, ownerId, name])
+  @@index([playlistId])
+  @@index([ownerId])
+}
+
+model BranchTrack {
+  id              String            @id @default(cuid())
+  branchId        String
+  trackId         String
+  position        Int
+  addedAt         DateTime          @default(now())
+  
+  branch          PlaylistBranch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  track           InternalTrack     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  
+  @@unique([branchId, trackId])
+  @@index([branchId, position])
+}
+
+enum BranchStatus {
+  ACTIVE          // User is still working on it
+  SUBMITTED       // Submitted as a PR
+  MERGED          // PR was accepted
+  ABANDONED       // User no longer wants it
+}
+
+// ==================== Pull Request System ====================
+
+model PullRequest {
+  id              String            @id @default(cuid())
+  playlistId      String
+  creatorId       String
+  ownerId         String
+  branchId        String?           @unique // Optional link to source branch
+  title           String
+  description     String?
+  status          PRStatus          @default(PENDING)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  playlist        InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  creator         User              @relation("PRCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  owner           User              @relation("PROwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  branch          PlaylistBranch?   @relation("BranchPR", fields: [branchId], references: [id], onDelete: SetNull)
+  diff            PRDiff?
+  
+  @@index([playlistId])
+  @@index([creatorId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+enum PRStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  MERGED
+}
+
+model PRDiff {
+  id              String          @id @default(cuid())
+  pullRequestId   String          @unique
+  trackChanges    Json?           // Array of track add/remove operations
+  metadataChanges Json?           // Changes to playlist name, description
+  commentChanges  Json?
+  ratingChanges   Json?
+  noteChanges     Json?
+  likeChanges     Json?
+  createdAt       DateTime        @default(now())
+  
+  pullRequest     PullRequest     @relation(fields: [pullRequestId], references: [id], onDelete: Cascade)
+}
+
+// ==================== Section 3: Stats & Taste Engine ====================
+
+model UserStats {
+  id                  String              @id @default(cuid())
+  userId              String              @unique
+  totalPlaylists      Int                 @default(0)
+  totalTracks         Int                 @default(0)
+  totalListeningTime  Int                 @default(0) // in seconds
+  lastUpdated         DateTime            @default(now())
+  
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  genreAffinities     GenreAffinityEntry[]
+  topArtists          TopArtistEntry[]
+  topTracks           TopTrackEntry[]
+  topGenres           TopGenreEntry[]
+}
+
+model GenreAffinityEntry {
+  id              String      @id @default(cuid())
+  userStatsId     String
+  genre           String
+  percentage      Float
+  
+  userStats       UserStats   @relation(fields: [userStatsId], references: [id], onDelete: Cascade)
+  
+  @@index([userStatsId])
+}
+
+model TopArtistEntry {
+  id              String      @id @default(cuid())
+  userStatsId     String
+  artistName      String
+  playCount       Int
+  rank            Int
+  
+  userStats       UserStats   @relation(fields: [userStatsId], references: [id], onDelete: Cascade)
+  
+  @@index([userStatsId])
+}
+
+model TopTrackEntry {
+  id              String      @id @default(cuid())
+  userStatsId     String
+  trackName       String
+  artistName      String
+  playCount       Int
+  rank            Int
+  
+  userStats       UserStats   @relation(fields: [userStatsId], references: [id], onDelete: Cascade)
+  
+  @@index([userStatsId])
+}
+
+model TopGenreEntry {
+  id              String      @id @default(cuid())
+  userStatsId     String
+  genre           String
+  count           Int
+  rank            Int
+  
+  userStats       UserStats   @relation(fields: [userStatsId], references: [id], onDelete: Cascade)
+  
+  @@index([userStatsId])
+}
+
+model PlaylistStats {
+  id                  String            @id @default(cuid())
+  playlistId          String            @unique
+  totalTracks         Int               @default(0)
+  totalDuration       Int               @default(0) // in seconds
+  averagePopularity   Float?
+  dominantGenre       String?
+  lastUpdated         DateTime          @default(now())
+  
+  playlist            InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+}
+
+model TasteProfile {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  featureVector       Json      // Numeric embedding of user's taste
+  lastUpdated         DateTime  @default(now())
+  
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PlaylistProfile {
+  id                  String            @id @default(cuid())
+  playlistId          String            @unique
+  featureVector       Json              // Numeric embedding for comparison
+  lastUpdated         DateTime          @default(now())
+  
+  playlist            InternalPlaylist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+}
+
+// ==================== Section 4: Spotify Data Models ====================
+
+model SpotifyAudioFeatures {
+  id                  String        @id @default(cuid())
+  trackId             String        @unique
+  acousticness        Float
+  danceability        Float
+  energy              Float
+  instrumentalness    Float
+  liveness            Float
+  loudness            Float
+  speechiness         Float
+  valence             Float
+  tempo               Float
+  key                 Int
+  mode                Int
+  timeSignature       Int
+  
+  track               InternalTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
+}
+
+model SpotifyArtist {
+  id                  String    @id @default(cuid())
+  spotifyId           String    @unique
+  name                String
+  genres              Json      // Array of genre strings
+  popularity          Int?
+  imageUrl            String?
+  createdAt           DateTime  @default(now())
+}
