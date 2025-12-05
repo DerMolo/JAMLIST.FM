@@ -11,9 +11,9 @@ SPOTIFY_CLIENT_SECRET="your_client_secret_from_spotify"
 # App URL (use 127.0.0.1 NOT localhost - Spotify requirement)
 NEXTAUTH_URL="http://127.0.0.1:3000"
 
-# Security Secrets (already generated - you can use these as-is!)
-NEXTAUTH_SECRET="tQuda4LmCud9aiyimjRMeK/bL6UmeSPGsIuF1mOrkT0="
-JWT_SECRET="mcfkivbLTbBMxwN8SZj92jnudjGh05PA9+2XmaIg100="
+# Security Secrets (generate using ssl) 
+NEXTAUTH_SECRET="<hash taken from openssl rand -base64 32>"
+JWT_SECRET="<hash taken from openssl rand -base64 32>"
 
 # ======================================
 # WHAT TO REPLACE:
