@@ -125,24 +125,6 @@ For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
 ---
 
-## Project Structure
-
-```
-├── app/                    # Next.js app directory
-│   ├── api/               # API routes
-│   │   ├── auth/         # Authentication endpoints
-│   │   ├── playlists/    # Playlist management
-│   │   ├── pull-requests/# PR workflow
-│   │   └── spotify/      # Spotify integration
-│   ├── playlists/        # Playlist pages
-│   ├── pull-requests/    # PR pages
-│   └── dashboard/        # User dashboard
-├── prisma/               # Database schema and migrations
-├── lib/                  # Utility functions
-├── types/                # TypeScript type definitions
-└── public/              # Static assets
-```
-
 ---
 
 ## Core Workflows
