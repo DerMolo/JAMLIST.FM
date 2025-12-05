@@ -4,7 +4,7 @@ This guide will help you push your code to: [https://github.com/DerMolo/JAMLIST.
 
 ---
 
-## 🚀 Quick Push to GitHub
+## Quick Push to GitHub
 
 ### Step 1: Initialize Git (if not already done)
 
@@ -60,14 +60,14 @@ git push -u origin main
 
 ---
 
-## 🔒 Important: Before Pushing
+## Important: Before Pushing
 
 ### Verify .gitignore
 
 Make sure these are in your `.gitignore` (already set up):
 
 ```gitignore
-# Environment variables (NEVER commit these!)
+# Environment variables (NEVER commit these)
 .env
 .env*.local
 
@@ -103,9 +103,9 @@ git ls-files | grep .env
 
 ---
 
-## 📝 What Gets Pushed
+## What Gets Pushed
 
-✅ **Will be pushed:**
+**Will be pushed:**
 - All source code files (`app/`, `lib/`, `types/`, etc.)
 - `package.json` and `package-lock.json`
 - Database schema (`prisma/schema.prisma`)
@@ -114,15 +114,15 @@ git ls-files | grep .env
 - `.gitignore` file
 - Setup scripts (setup.sh, setup.bat)
 
-❌ **Will NOT be pushed (protected by .gitignore):**
-- `.env` file (contains secrets!)
+**Will NOT be pushed (protected by .gitignore):**
+- `.env` file (contains secrets)
 - `node_modules/` (too large, regenerated with npm install)
 - `.next/` (build output, regenerated)
 - Database migration history (optional)
 
 ---
 
-## 🌐 After Pushing to GitHub
+## After Pushing to GitHub
 
 ### 1. Verify Upload
 
@@ -132,7 +132,7 @@ Visit [https://github.com/DerMolo/JAMLIST.FM](https://github.com/DerMolo/JAMLIST
 
 **Add Repository Description:**
 ```
-🎵 Collaborative playlist management with Git-like branching, pull requests, and granular approval controls for Spotify playlists
+Collaborative playlist management with Git-like branching, pull requests, and granular approval controls for Spotify playlists
 ```
 
 **Add Topics (Tags):**
@@ -152,7 +152,7 @@ Visit [https://github.com/DerMolo/JAMLIST.FM](https://github.com/DerMolo/JAMLIST
 ### 3. Enable GitHub Features
 
 **Discussions:**
-- Settings → Features → Enable Discussions
+- Settings, then Features, then Enable Discussions
 
 **Issues:**
 - Already enabled by default
@@ -164,12 +164,12 @@ Visit [https://github.com/DerMolo/JAMLIST.FM](https://github.com/DerMolo/JAMLIST
 ### 4. Add Repository Secrets (for GitHub Actions)
 
 If you plan to use CI/CD:
-- Settings → Secrets and variables → Actions
+- Settings, then Secrets and variables, then Actions
 - Add: `DATABASE_URL`, `NEXTAUTH_SECRET`, etc.
 
 ---
 
-## 🔄 Future Updates
+## Future Updates
 
 ### Making Changes and Pushing
 
@@ -219,9 +219,9 @@ git merge feature/new-feature
 
 ---
 
-## 🚢 Deploying to Vercel from GitHub
+## Deploying to Vercel from GitHub
 
-Once your code is on GitHub, deploying is easy:
+Once your code is on GitHub, deploying is straightforward:
 
 ### 1. Connect Vercel to GitHub
 
@@ -240,7 +240,7 @@ Vercel auto-detects Next.js settings:
 
 ### 3. Add Environment Variables
 
-In Vercel dashboard → Settings → Environment Variables:
+In Vercel dashboard, navigate to Settings, then Environment Variables:
 
 ```env
 DATABASE_URL=your-production-database-url
@@ -274,7 +274,7 @@ Every time you push to GitHub:
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### "fatal: remote origin already exists"
 
@@ -289,7 +289,7 @@ git remote add origin https://github.com/DerMolo/JAMLIST.FM.git
 ### "Authentication failed"
 
 Use GitHub Personal Access Token:
-1. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+1. GitHub, then Settings, then Developer settings, then Personal access tokens, then Tokens (classic)
 2. Generate new token with `repo` scope
 3. Use token as password when pushing
 
@@ -327,7 +327,7 @@ git push origin main
 
 ---
 
-## 📋 Pre-Push Checklist
+## Pre-Push Checklist
 
 Before pushing, verify:
 
@@ -342,7 +342,7 @@ Before pushing, verify:
 
 ---
 
-## 🎯 Quick Command Summary
+## Quick Command Summary
 
 ```bash
 # First time push
@@ -364,7 +364,7 @@ git log --oneline
 
 ---
 
-## 📱 GitHub Mobile App
+## GitHub Mobile App
 
 Download GitHub Mobile to:
 - View code on the go
@@ -376,11 +376,11 @@ Available for iOS and Android.
 
 ---
 
-## 🤝 Collaborating with Others
+## Collaborating with Others
 
 ### Adding Collaborators
 
-1. Repository → Settings → Collaborators
+1. Repository, then Settings, then Collaborators
 2. Add GitHub usernames
 3. They can now push to the repo
 
@@ -394,7 +394,7 @@ When others contribute:
 
 ---
 
-## 🔐 Security Best Practices
+## Security Best Practices
 
 1. **Never commit `.env`** - Always in `.gitignore`
 2. **Use GitHub Secrets** - For CI/CD environment variables
@@ -404,7 +404,7 @@ When others contribute:
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [GitHub Docs](https://docs.github.com/)
 - [Git Cheat Sheet](https://training.github.com/downloads/github-git-cheat-sheet/)
@@ -413,11 +413,11 @@ When others contribute:
 
 ---
 
-**Ready to push?** Run the commands above and your code will be live on GitHub! 🚀
+**Ready to push?** Run the commands above and your code will be live on GitHub.
 
 ---
 
-## 🎉 After First Push
+## After First Push
 
 Once pushed, you can:
 - Share the repo link with others
@@ -427,5 +427,4 @@ Once pushed, you can:
 - Track issues and features
 - Build a community around your project
 
-Your code is now backed up and version-controlled! 🎵
-
+Your code is now backed up and version-controlled.

@@ -62,7 +62,7 @@ npx prisma generate
 
 1. **Test PR Creation with Branch:**
 ```bash
-curl -X POST http://localhost:3000/api/pull-requests \
+curl -X POST http://127.0.0.1:3000/api/pull-requests \
   -H "Content-Type: application/json" \
   -d '{
     "playlistId": "your-playlist-id",
@@ -74,7 +74,7 @@ curl -X POST http://localhost:3000/api/pull-requests \
 
 2. **Test Granular Approval:**
 ```bash
-curl -X POST http://localhost:3000/api/pull-requests/{prId}/approve-change \
+curl -X POST http://127.0.0.1:3000/api/pull-requests/{prId}/approve-change \
   -H "Content-Type: application/json" \
   -d '{
     "changeType": "track_addition",
@@ -86,7 +86,7 @@ curl -X POST http://localhost:3000/api/pull-requests/{prId}/approve-change \
 3. **Test Track Reordering:**
 ```bash
 # Playlist reorder
-curl -X POST http://localhost:3000/api/playlists/{playlistId}/tracks/reorder \
+curl -X POST http://127.0.0.1:3000/api/playlists/{playlistId}/tracks/reorder \
   -H "Content-Type: application/json" \
   -d '{
     "trackId": "internal-track-id",
@@ -94,7 +94,7 @@ curl -X POST http://localhost:3000/api/playlists/{playlistId}/tracks/reorder \
   }'
 
 # Branch reorder
-curl -X POST http://localhost:3000/api/playlists/{playlistId}/branches/{branchId}/tracks/reorder \
+curl -X POST http://127.0.0.1:3000/api/playlists/{playlistId}/branches/{branchId}/tracks/reorder \
   -H "Content-Type: application/json" \
   -d '{
     "trackId": "internal-track-id",
@@ -224,7 +224,7 @@ All new features use existing dependencies. No new packages need to be installed
 
 1. **Granular Approvals:** Stored as JSON, indexed on pullRequestId
 2. **Track Reordering:** Updates multiple rows, wrapped in transaction implicitly
-3. **Notifications:** Async operation, doesn't block main request
+3. **Notifications:** Async operation, does not block main request
 
 ---
 
@@ -251,7 +251,6 @@ If you encounter any issues:
 ---
 
 **Migration Complexity:** Low  
-**Estimated Downtime:** < 1 minute  
+**Estimated Downtime:** Less than 1 minute  
 **Backward Compatible:** Yes  
 **Rollback Available:** Yes
-

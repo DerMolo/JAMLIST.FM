@@ -47,19 +47,21 @@ CREATE DATABASE spotifyapp;
 4. Fill in the form:
    - **App Name**: `Spotify Collaborative Playlists` (or any name)
    - **App Description**: `Collaborative playlist management platform`
-   - **Redirect URI**: `http://localhost:3000/api/auth/callback/spotify`
+   - **Redirect URI**: `http://127.0.0.1:3000/api/auth/callback/spotify`
    - **APIs Used**: Select `Web API`
    - Accept the terms and click **Create**
 5. On the app page, click **Settings**
 6. Copy your **Client ID**
 7. Click **View client secret** and copy the **Client Secret**
-8. **Important**: Keep these credentials private!
+8. **Important**: Keep these credentials private
+
+**Note**: Spotify requires the use of `127.0.0.1` rather than `localhost` for redirect URIs. See `SPOTIFY_SETUP_GUIDE.md` for detailed information.
 
 ### 3. Project Setup
 
 1. **Navigate to the project directory**:
    ```bash
-   cd C:\Users\Iampi\OneDrive\Desktop\FinalProjectSpotifyWebApp
+   cd FinalProjectSpotifyWebApp
    ```
 
 2. **Install dependencies** (if not already done):
@@ -81,8 +83,8 @@ CREATE DATABASE spotifyapp;
    SPOTIFY_CLIENT_ID="your_spotify_client_id_here"
    SPOTIFY_CLIENT_SECRET="your_spotify_client_secret_here"
 
-   # NextAuth Configuration
-   NEXTAUTH_URL="http://localhost:3000"
+   # NextAuth Configuration - Use 127.0.0.1, not localhost
+   NEXTAUTH_URL="http://127.0.0.1:3000"
    NEXTAUTH_SECRET="your_generated_secret_1"
 
    # JWT Secret
@@ -112,8 +114,8 @@ CREATE DATABASE spotifyapp;
 
    You should see output like:
    ```
-   ✔ Your database is now in sync with your Prisma schema.
-   ✔ Generated Prisma Client
+   Your database is now in sync with your Prisma schema.
+   Generated Prisma Client
    ```
 
 2. **(Optional) Open Prisma Studio** to view your database:
@@ -130,7 +132,7 @@ Run a build to make sure everything is configured correctly:
 npm run build
 ```
 
-If the build succeeds, you're ready to go!
+If the build succeeds, you are ready to proceed.
 
 ### 6. Start the Development Server
 
@@ -138,20 +140,20 @@ If the build succeeds, you're ready to go!
 npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000)
+The application will be available at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ## First Time Usage
 
 ### Create an Account
 
-1. Go to http://localhost:3000
+1. Go to http://127.0.0.1:3000
 2. Click **"Create Account"** or **"Sign up with Spotify"**
 3. If using email:
    - Enter your email, password, and display name
    - Click **"Create Account"**
 4. If using Spotify:
-   - You'll be redirected to Spotify to authorize the app
-   - After authorization, you'll be redirected back to the dashboard
+   - You will be redirected to Spotify to authorize the app
+   - After authorization, you will be redirected back to the dashboard
 
 ### Create Your First Playlist
 
@@ -167,7 +169,7 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ### Database Connection Issues
 
-**Error: `connection refused` or `FATAL: role "Iampi" does not exist`**
+**Error: `connection refused` or `FATAL: role "..." does not exist`**
 
 Solution:
 1. Make sure PostgreSQL is running
@@ -186,8 +188,9 @@ psql -U postgres -d spotifyapp
 
 Solution:
 1. Verify your Client ID and Secret in `.env` match your Spotify app
-2. Check that `http://localhost:3000/api/auth/callback/spotify` is in your Spotify app's Redirect URIs
-3. Make sure there are no trailing slashes
+2. Check that `http://127.0.0.1:3000/api/auth/callback/spotify` is in your Spotify app's Redirect URIs
+3. Use `127.0.0.1` NOT `localhost`
+4. Make sure there are no trailing slashes
 
 ### Port Already in Use
 
@@ -279,7 +282,7 @@ Once your app is running:
 
 ## Security Notes
 
-⚠️ **Important**:
+**Important**:
 - Never commit your `.env` file to git
 - Keep your Spotify credentials private
 - Use strong, unique secrets for production
@@ -294,5 +297,4 @@ Once your app is running:
 
 ---
 
-**You're all set!** 🎉 Enjoy building collaborative playlists!
-
+**You are all set.** Enjoy building collaborative playlists.

@@ -1,26 +1,26 @@
 # Setup Guide - Spotify Playlist Web App
 
-This guide will help you get the Spotify Playlist Branching System running on any device.
+This guide provides instructions for setting up the Spotify Playlist Branching System on any device.
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before starting, ensure you have:
 
 - **Node.js** 18.x or higher ([Download](https://nodejs.org/))
 - **npm** or **yarn** package manager
-- **PostgreSQL** database ([Local installation](https://www.postgresql.org/download/) or cloud service like [Supabase](https://supabase.com/), [Neon](https://neon.tech/), or [Railway](https://railway.app/))
+- **PostgreSQL** database ([Local installation](https://www.postgresql.org/download/) or cloud service such as [Supabase](https://supabase.com/), [Neon](https://neon.tech/), or [Railway](https://railway.app/))
 - **Spotify Developer Account** ([Sign up](https://developer.spotify.com/))
 - **Git** (for cloning the repository)
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### Step 1: Clone or Copy the Project
 
-**Option A - If using Git:**
+**Option A - Using Git:**
 ```bash
 git clone <your-repo-url>
 cd FinalProjectSpotifyWebApp
@@ -28,7 +28,7 @@ cd FinalProjectSpotifyWebApp
 
 **Option B - Manual Copy:**
 - Copy the entire project folder to your device
-- Open terminal/command prompt in the project directory
+- Open terminal or command prompt in the project directory
 
 ### Step 2: Install Dependencies
 
@@ -47,12 +47,15 @@ This installs all required packages from `package.json`.
 3. Fill in the details:
    - **App Name:** Your app name (e.g., "My Playlist App")
    - **App Description:** Any description
-   - **Redirect URI:** `http://localhost:3000/api/auth/callback/spotify`
+   - **Redirect URI:** `http://127.0.0.1:3000/api/auth/callback/spotify`
    - **APIs Used:** Web API
 4. Click "Save"
 5. Note your **Client ID** and **Client Secret**
 6. Click "Edit Settings" and add to Redirect URIs:
-   - `http://localhost:3000/api/auth/callback/spotify`
+   - `http://127.0.0.1:3000/api/auth/callback/spotify`
+   - `http://[::1]:3000/api/auth/callback/spotify`
+
+**Important:** Spotify requires the use of loopback IP addresses (`127.0.0.1` or `[::1]`) rather than `localhost` for redirect URIs. See `SPOTIFY_SETUP_GUIDE.md` for detailed configuration instructions.
 
 ### Step 4: Set Up Database
 
@@ -67,7 +70,7 @@ createdb spotify_playlist_db
 **Using Supabase (Free):**
 1. Go to [supabase.com](https://supabase.com/)
 2. Create new project
-3. Go to Settings → Database
+3. Go to Settings, then Database
 4. Copy the connection string (pooler connection string recommended)
 
 **Using Neon (Free):**
@@ -87,8 +90,8 @@ DATABASE_URL="postgresql://username:password@localhost:5432/spotify_playlist_db"
 # For cloud databases, use the connection string provided:
 # DATABASE_URL="postgresql://user:pass@host.region.provider.com:5432/dbname?sslmode=require"
 
-# NextAuth Configuration
-NEXTAUTH_URL="http://localhost:3000"
+# NextAuth Configuration - IMPORTANT: Use 127.0.0.1, not localhost
+NEXTAUTH_URL="http://127.0.0.1:3000"
 NEXTAUTH_SECRET="your-random-secret-key-here"
 # Generate a secret: openssl rand -base64 32
 
@@ -129,11 +132,11 @@ npm run dev
 yarn dev
 ```
 
-The app will be available at: **http://localhost:3000**
+The app will be available at: **http://127.0.0.1:3000**
 
 ---
 
-## 🌐 Setting Up on Another Local Device (Same Network)
+## Setting Up on Another Local Device (Same Network)
 
 ### On the Host Machine:
 
@@ -172,18 +175,18 @@ The app will be available at: **http://localhost:3000**
    # Example: http://192.168.1.100:3000
    ```
 
-2. You can now use the app from any device on your local network!
+2. You can now use the app from any device on your local network.
 
 ---
 
-## ☁️ Deploying to Production (Vercel - Recommended)
+## Deploying to Production (Vercel - Recommended)
 
-Vercel is the easiest way to deploy Next.js apps.
+Vercel is the recommended platform for deploying Next.js applications.
 
 ### Step 1: Prepare for Deployment
 
 1. Push your code to GitHub, GitLab, or Bitbucket
-2. Ensure `.env` is in `.gitignore` (already set up)
+2. Ensure `.env` is in `.gitignore` (already configured)
 
 ### Step 2: Deploy to Vercel
 
@@ -197,7 +200,7 @@ Vercel is the easiest way to deploy Next.js apps.
 
 ### Step 3: Set Environment Variables in Vercel
 
-In Vercel project settings → Environment Variables, add:
+In Vercel project settings, navigate to Environment Variables and add:
 
 ```env
 DATABASE_URL=your-production-database-url
@@ -225,7 +228,7 @@ Click "Deploy" - Vercel will:
 ### Step 6: Run Database Migrations in Production
 
 **Option A - Using Vercel Terminal:**
-1. Go to your project → Settings → General → Connect Git
+1. Go to your project, then Settings, then General, then Connect Git
 2. In deployment logs, find the deployment
 3. Run: `npx prisma migrate deploy`
 
@@ -237,7 +240,7 @@ DATABASE_URL="your-production-db" npx prisma migrate deploy
 
 ---
 
-## 🐳 Docker Setup (Optional)
+## Docker Setup (Optional)
 
 For containerized deployment, create:
 
@@ -309,7 +312,7 @@ docker-compose up
 
 ---
 
-## 📱 Mobile Device Access
+## Mobile Device Access
 
 ### Same Network (Development):
 1. Start dev server on `0.0.0.0` (see above)
@@ -327,7 +330,7 @@ npm install next-pwa
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### "Module not found" errors:
 ```bash
@@ -341,13 +344,13 @@ npm install
 # Test database connection
 npx prisma db pull
 
-# Reset database (⚠️ deletes all data)
+# Reset database (WARNING: deletes all data)
 npx prisma migrate reset
 ```
 
 ### Spotify authentication fails:
 1. Check Redirect URIs in Spotify Dashboard match exactly
-2. Verify `NEXTAUTH_URL` in `.env`
+2. Verify `NEXTAUTH_URL` in `.env` uses `127.0.0.1` (not `localhost`)
 3. Clear browser cookies and try again
 
 ### Port 3000 already in use:
@@ -364,7 +367,7 @@ npx prisma generate
 
 ---
 
-## 🔐 Security Best Practices
+## Security Best Practices
 
 ### For Production:
 
@@ -386,7 +389,7 @@ npx prisma generate
 
 ---
 
-## 📊 Database Management
+## Database Management
 
 ### View Database:
 ```bash
@@ -411,12 +414,12 @@ npx prisma migrate deploy
 
 ---
 
-## 🎯 Different Setup Scenarios
+## Different Setup Scenarios
 
 ### Scenario 1: Developer's Personal Machine
 - Use local PostgreSQL or free cloud DB (Supabase)
 - Run with `npm run dev`
-- Access at `localhost:3000`
+- Access at `127.0.0.1:3000`
 
 ### Scenario 2: Team Development (Multiple Developers)
 - Use shared cloud database (staging)
@@ -436,19 +439,19 @@ npx prisma migrate deploy
 
 ---
 
-## 📝 Environment Variables Reference
+## Environment Variables Reference
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string | `postgresql://user:pass@host:5432/db` |
-| `NEXTAUTH_URL` | ✅ | Your app URL | `http://localhost:3000` or `https://yourdomain.com` |
-| `NEXTAUTH_SECRET` | ✅ | Random secret for JWT | `openssl rand -base64 32` |
-| `SPOTIFY_CLIENT_ID` | ✅ | From Spotify Developer Dashboard | `abc123...` |
-| `SPOTIFY_CLIENT_SECRET` | ✅ | From Spotify Developer Dashboard | `xyz789...` |
+| `DATABASE_URL` | Yes | PostgreSQL connection string | `postgresql://user:pass@host:5432/db` |
+| `NEXTAUTH_URL` | Yes | Your app URL | `http://127.0.0.1:3000` or `https://yourdomain.com` |
+| `NEXTAUTH_SECRET` | Yes | Random secret for JWT | `openssl rand -base64 32` |
+| `SPOTIFY_CLIENT_ID` | Yes | From Spotify Developer Dashboard | `abc123...` |
+| `SPOTIFY_CLIENT_SECRET` | Yes | From Spotify Developer Dashboard | `xyz789...` |
 
 ---
 
-## 🚦 Getting Started Checklist
+## Getting Started Checklist
 
 - [ ] Node.js 18+ installed
 - [ ] Project files copied/cloned
@@ -458,13 +461,13 @@ npx prisma migrate deploy
 - [ ] `.env` file created with all variables
 - [ ] Database migrations run (`npx prisma migrate dev`)
 - [ ] Dev server started (`npm run dev`)
-- [ ] App accessible at `localhost:3000`
+- [ ] App accessible at `127.0.0.1:3000`
 - [ ] Spotify login working
 - [ ] Test creating a playlist
 
 ---
 
-## 📞 Quick Commands Reference
+## Quick Commands Reference
 
 ```bash
 # Install dependencies
@@ -491,13 +494,13 @@ npx prisma studio
 # Run migrations in production
 npx prisma migrate deploy
 
-# Reset database (⚠️ deletes data)
+# Reset database (WARNING: deletes data)
 npx prisma migrate reset
 ```
 
 ---
 
-## 🎓 Next Steps After Setup
+## Next Steps After Setup
 
 1. Create your first account
 2. Connect Spotify account
@@ -513,5 +516,4 @@ npx prisma migrate reset
 - Subsequent setups: 5-10 minutes
 - Production deployment: 10-20 minutes
 
-Need help? Check the troubleshooting section or review the application logs!
-
+Need help? Check the troubleshooting section or review the application logs.

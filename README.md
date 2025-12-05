@@ -1,6 +1,6 @@
-# 🎵 Spotify Playlist Branching System
+# Spotify Playlist Branching System
 
-A collaborative playlist management platform inspired by Git workflows. Create branches of playlists, propose changes through pull requests, and manage collaborative music curation with granular approval controls.
+A collaborative playlist management platform inspired by Git workflows. Users can create branches of playlists, propose changes through pull requests, and manage collaborative music curation with granular approval controls.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat&logo=typescript)
@@ -9,46 +9,46 @@ A collaborative playlist management platform inspired by Git workflows. Create b
 
 ---
 
-## ✨ Features
+## Features
 
-### 🎼 Playlist Management
-- **Import from Spotify:** Sync your existing Spotify playlists
-- **Create Custom Playlists:** Build playlists from scratch
-- **Collaborative Editing:** Share playlists with contributors
-- **Public/Private Playlists:** Control visibility and access
+### Playlist Management
+- **Import from Spotify:** Synchronize existing Spotify playlists with the application.
+- **Create Custom Playlists:** Build playlists from scratch within the platform.
+- **Collaborative Editing:** Share playlists with contributors for joint curation.
+- **Public/Private Playlists:** Control visibility and access permissions.
 
-### 🌿 Git-Like Branching
-- **Fork Playlists:** Create your own copy of any public playlist
-- **Create Branches:** Experiment with track orders and selections
-- **Track Changes:** Automatic diff calculation (additions, removals, reordering)
-- **Branch Protection:** Submitted branches remain accessible
+### Git-Like Branching
+- **Fork Playlists:** Create personal copies of any public playlist.
+- **Create Branches:** Experiment with track orders and selections without affecting the original.
+- **Track Changes:** Automatic diff calculation for additions, removals, and reordering.
+- **Branch Protection:** Submitted branches remain accessible after pull request submission.
 
-### 🔄 Pull Request Workflow
-- **Submit Changes:** Propose modifications to playlist owners
-- **Visual Diff:** See exactly what changed (tracks added/removed)
-- **Branch Tracking:** View complete branch tracklist in PRs
-- **Granular Approvals:** Approve or reject individual changes
-- **Merge Control:** Apply only approved changes to main playlist
+### Pull Request Workflow
+- **Submit Changes:** Propose modifications to playlist owners through structured requests.
+- **Visual Diff:** View exact changes including tracks added and removed.
+- **Branch Tracking:** Access complete branch tracklist within pull requests.
+- **Granular Approvals:** Approve or reject individual changes rather than entire submissions.
+- **Merge Control:** Apply only approved changes to the main playlist.
 
-### 🔔 Notification System
-- **PR Updates:** Get notified when PRs are opened, approved, or rejected
-- **Like Alerts:** Know when someone likes your playlist
-- **Branch Notifications:** Be informed when users create branches
-- **Fork Alerts:** Track who's forking your playlists
+### Notification System
+- **PR Updates:** Receive notifications when pull requests are opened, approved, or rejected.
+- **Like Alerts:** Be notified when others like your playlists.
+- **Branch Notifications:** Receive alerts when users create branches of your playlists.
+- **Fork Alerts:** Track who is forking your playlists.
 
-### 🎚️ Advanced Features
-- **Track Reordering:** Drag tracks to new positions in playlists and branches
-- **Granular Approval:** Chief contributors can approve changes individually
-- **Change Tracking:** Full history of all modifications
-- **User Profiles:** Customize your profile and view stats
-- **Search & Discovery:** Browse public playlists and discover new music
+### Advanced Features
+- **Track Reordering:** Drag tracks to new positions in playlists and branches.
+- **Granular Approval:** Chief contributors can approve changes individually.
+- **Change Tracking:** Full history of all modifications is maintained.
+- **User Profiles:** Customize your profile and view statistics.
+- **Search and Discovery:** Browse public playlists and discover new music.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18 or higher
 - PostgreSQL database
 - Spotify Developer account
 
@@ -72,10 +72,12 @@ A collaborative playlist management platform inspired by Git workflows. Create b
    ```
 
 4. **Configure Spotify API:**
-   - Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-   - Create a new app
-   - Add redirect URI: `http://localhost:3000/api/auth/callback/spotify`
-   - Copy Client ID and Secret to `.env`
+   - Navigate to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+   - Create a new application
+   - Add redirect URI: `http://127.0.0.1:3000/api/auth/callback/spotify`
+   - Copy the Client ID and Secret to your `.env` file
+
+   **Important:** Spotify requires the use of `127.0.0.1` rather than `localhost` for redirect URIs. See `SPOTIFY_SETUP_GUIDE.md` for detailed instructions.
 
 5. **Set up database:**
    ```bash
@@ -89,21 +91,21 @@ A collaborative playlist management platform inspired by Git workflows. Create b
    ```
 
 7. **Open your browser:**
-   Navigate to `http://localhost:3000`
+   Navigate to `http://127.0.0.1:3000`
 
 For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 - **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Complete setup instructions for all platforms
-- **[CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md)** - Recent updates and feature additions
+- **[SPOTIFY_SETUP_GUIDE.md](./SPOTIFY_SETUP_GUIDE.md)** - Spotify OAuth configuration guide
 - **[MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)** - Database migration instructions
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Next.js 14.2** - React framework with server-side rendering
@@ -118,12 +120,12 @@ For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 - **PostgreSQL** - Relational database
 
 ### External Services
-- **Spotify Web API** - Music data and playback
+- **Spotify Web API** - Music data and playback integration
 - **Sharp** - Image processing for playlist covers
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── app/                    # Next.js app directory
@@ -143,7 +145,7 @@ For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
 ---
 
-## 🎯 Core Workflows
+## Core Workflows
 
 ### Creating a Branch and Pull Request
 
@@ -151,7 +153,7 @@ For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 2. **Create a branch** with your proposed changes
 3. **Add, remove, or reorder tracks** in your branch
 4. **Submit a pull request** with your changes
-5. **Playlist owner reviews** and approves/rejects changes
+5. **Playlist owner reviews** and approves or rejects changes
 6. **Merge approved changes** into the main playlist
 
 ### Granular Approval Process
@@ -159,9 +161,9 @@ For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 ```
 User Creates PR → Owner Reviews Individual Changes
                     ↓
-              Approve Track A ✓
-              Reject Track B ✗
-              Approve Reorder ✓
+              Approve Track A (accepted)
+              Reject Track B (rejected)
+              Approve Reorder (accepted)
                     ↓
               Owner Merges PR
                     ↓
@@ -170,13 +172,13 @@ User Creates PR → Owner Reviews Individual Changes
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 Create a `.env` file with the following variables:
 
 ```env
 DATABASE_URL="postgresql://..."          # PostgreSQL connection
-NEXTAUTH_URL="http://localhost:3000"     # Your app URL
+NEXTAUTH_URL="http://127.0.0.1:3000"     # Your app URL (use 127.0.0.1 for local development)
 NEXTAUTH_SECRET="random-secret-here"     # JWT secret
 SPOTIFY_CLIENT_ID="your-client-id"       # Spotify app ID
 SPOTIFY_CLIENT_SECRET="your-secret"      # Spotify app secret
@@ -186,16 +188,16 @@ See `.env.example` for a complete template.
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 
 1. Push code to GitHub
 2. Import project in Vercel
 3. Add environment variables
-4. Deploy!
+4. Deploy
 
-Detailed instructions: [SETUP_GUIDE.md - Deploying to Production](./SETUP_GUIDE.md#-deploying-to-production-vercel---recommended)
+Detailed instructions: [SETUP_GUIDE.md - Deploying to Production](./SETUP_GUIDE.md#deploying-to-production-vercel---recommended)
 
 ### Other Platforms
 
@@ -207,7 +209,7 @@ Compatible with:
 
 ---
 
-## 🛠️ Development
+## Development
 
 ### Available Scripts
 
@@ -229,22 +231,22 @@ npx prisma generate            # Generate Prisma Client
 
 ---
 
-## 🧪 Testing Features
+## Testing Features
 
-After setup, try these workflows:
+After setup, verify the following workflows:
 
 1. **Import a Spotify playlist**
 2. **Create a branch** of that playlist
 3. **Reorder tracks** in your branch
 4. **Submit a PR** with your changes
-5. **Review the PR** (if you're the owner)
+5. **Review the PR** (if you are the owner)
 6. **Approve individual tracks**
 7. **Merge the PR**
 8. **Verify changes** applied correctly
 
 ---
 
-## 📊 Database Schema
+## Database Schema
 
 Key models:
 
@@ -259,9 +261,9 @@ View full schema: [prisma/schema.prisma](./prisma/schema.prisma)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-This project supports collaborative music curation! Features for contributors:
+This project supports collaborative music curation. Features for contributors:
 
 - Fork playlists to create your own versions
 - Create branches for experimental changes
@@ -271,7 +273,7 @@ This project supports collaborative music curation! Features for contributors:
 
 ---
 
-## 🔒 Security
+## Security
 
 - **Authentication:** Secure OAuth 2.0 with Spotify
 - **Authorization:** Role-based access control
@@ -281,7 +283,7 @@ This project supports collaborative music curation! Features for contributors:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -292,7 +294,8 @@ This project supports collaborative music curation! Features for contributors:
 
 **"Spotify authentication fails"**
 - Verify Spotify credentials in `.env`
-- Check redirect URIs match exactly
+- Ensure redirect URIs use `127.0.0.1` (not `localhost`)
+- Check redirect URIs match exactly in Spotify Dashboard
 - Clear browser cookies and retry
 
 **"Module not found"**
@@ -301,31 +304,29 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-See [SETUP_GUIDE.md - Troubleshooting](./SETUP_GUIDE.md#-troubleshooting) for more solutions.
+See [SETUP_GUIDE.md - Troubleshooting](./SETUP_GUIDE.md#troubleshooting) for more solutions.
 
 ---
 
-## 📝 Recent Updates
+## Recent Updates
 
 ### Version 1.1.0 (December 2025)
 
-✅ **Issues Fixed:**
+**Issues Fixed:**
 - Branch change tracking now works correctly
 - PRs properly display branch tracks
 - Branches persist after PR submission
 - Multiple forks of same playlist allowed
 
-✨ **New Features:**
+**New Features:**
 - Granular approval system for individual changes
 - Track reordering for playlists and branches
 - Enhanced notification system (likes, branches, PRs)
 - Auto-calculated diffs for branch PRs
 
-See [CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md) for complete details.
-
 ---
 
-## 🎵 Use Cases
+## Use Cases
 
 - **DJs:** Collaborate on setlists with contributors
 - **Party Planners:** Crowdsource playlist suggestions
@@ -335,22 +336,21 @@ See [CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md) for complete details.
 
 ---
 
-## 📧 Support
+## Support
 
 For issues or questions:
-1. Check [SETUP_GUIDE.md](./SETUP_GUIDE.md) for setup help
-2. Review [CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md) for recent changes
-3. Check application logs for error messages
+1. Check [SETUP_GUIDE.md](./SETUP_GUIDE.md) for setup assistance
+2. Check application logs for error messages
 
 ---
 
-## 📄 License
+## License
 
 This project is for educational and personal use.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Built with:
 - [Next.js](https://nextjs.org/) - React framework
@@ -361,7 +361,7 @@ Built with:
 
 ---
 
-## 🚀 Getting Started Now
+## Getting Started Now
 
 ```bash
 # Quick start in 5 commands
@@ -374,4 +374,4 @@ npx prisma migrate dev
 npm run dev
 ```
 
-**Happy playlist curating! 🎶**
+Access the application at `http://127.0.0.1:3000`

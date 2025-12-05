@@ -1,10 +1,10 @@
-# Quick Start Guide - TL;DR Version
+# Quick Start Guide
 
-Get up and running in 5 minutes! ⚡
+Get up and running in 5 minutes.
 
 ---
 
-## 🖥️ On Your Computer (First Time)
+## On Your Computer (First Time)
 
 ### 1. Prerequisites Check
 ```bash
@@ -46,7 +46,7 @@ npx prisma migrate dev
 Copy this template and fill in values:
 ```env
 DATABASE_URL="postgresql://user:pass@localhost:5432/spotify_db"
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://127.0.0.1:3000"
 NEXTAUTH_SECRET="run: openssl rand -base64 32"
 SPOTIFY_CLIENT_ID="get-from-spotify-dashboard"
 SPOTIFY_CLIENT_SECRET="get-from-spotify-dashboard"
@@ -54,8 +54,10 @@ SPOTIFY_CLIENT_SECRET="get-from-spotify-dashboard"
 
 **Spotify Setup (2 minutes):**
 1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
-2. Create App → Get Client ID & Secret
-3. Add Redirect URI: `http://localhost:3000/api/auth/callback/spotify`
+2. Create App, then obtain Client ID and Secret
+3. Add Redirect URI: `http://127.0.0.1:3000/api/auth/callback/spotify`
+
+**Important:** Spotify requires `127.0.0.1` rather than `localhost` for redirect URIs.
 
 **Database Options:**
 - **Local:** Install PostgreSQL, create database
@@ -65,11 +67,11 @@ SPOTIFY_CLIENT_SECRET="get-from-spotify-dashboard"
 ```bash
 npm run dev
 ```
-Open `http://localhost:3000` 🎉
+Open `http://127.0.0.1:3000`
 
 ---
 
-## 📱 On Another Device (Same Network)
+## On Another Device (Same Network)
 
 ### On Host Computer:
 1. Find your IP:
@@ -95,11 +97,11 @@ Open `http://localhost:3000` 🎉
    ```
 
 ### On Other Device:
-Open browser → `http://YOUR_IP:3000`
+Open browser and navigate to `http://YOUR_IP:3000`
 
 ---
 
-## 🌐 Deploy to Internet (Vercel)
+## Deploy to Internet (Vercel)
 
 ### One-Time Setup (10 minutes):
 
@@ -114,9 +116,9 @@ Open browser → `http://YOUR_IP:3000`
 
 2. **Deploy on Vercel:**
    - Go to [vercel.com](https://vercel.com/)
-   - "New Project" → Import your repo
+   - "New Project" then import your repo
    - Add Environment Variables (same as .env)
-   - Deploy!
+   - Deploy
 
 3. **Update Spotify:**
    - Add Vercel URL to Redirect URIs
@@ -128,11 +130,11 @@ Open browser → `http://YOUR_IP:3000`
    npx prisma migrate deploy
    ```
 
-**Done!** Your app is live on `https://your-app.vercel.app`
+**Done.** Your app is live on `https://your-app.vercel.app`
 
 ---
 
-## 🔧 Troubleshooting (Common Issues)
+## Troubleshooting (Common Issues)
 
 ### "Can't connect to database"
 ```bash
@@ -145,6 +147,7 @@ npx prisma db pull
 
 ### "Spotify auth fails"
 - Redirect URIs must match EXACTLY (no trailing slashes)
+- Use `127.0.0.1` NOT `localhost`
 - Check NEXTAUTH_URL matches your URL
 - Clear cookies and try again
 
@@ -167,7 +170,7 @@ npm run dev -- -p 3001
 
 ---
 
-## 📱 Different Devices Scenarios
+## Different Devices Scenarios
 
 | Scenario | Setup Time | What You Need |
 |----------|------------|---------------|
@@ -180,21 +183,21 @@ npm run dev -- -p 3001
 
 ---
 
-## 🎯 Minimum Required Files
+## Minimum Required Files
 
 To move project to another device, you need:
 ```
-✅ All source code files
-✅ package.json & package-lock.json
-✅ prisma/ folder
-✅ .env file (manually create with credentials)
-❌ node_modules/ (will be regenerated)
-❌ .next/ (will be regenerated)
+Required: All source code files
+Required: package.json & package-lock.json
+Required: prisma/ folder
+Required: .env file (manually create with credentials)
+Not required: node_modules/ (will be regenerated)
+Not required: .next/ (will be regenerated)
 ```
 
 ---
 
-## 📋 Setup Checklist
+## Setup Checklist
 
 Copy this to a new device:
 
@@ -208,18 +211,18 @@ Copy this to a new device:
     [ ] NEXTAUTH_SECRET
     [ ] SPOTIFY_CLIENT_ID
     [ ] SPOTIFY_CLIENT_SECRET
-[ ] Spotify app created with correct redirect URI
+[ ] Spotify app created with correct redirect URI (using 127.0.0.1)
 [ ] Database created and accessible
 [ ] npx prisma generate
 [ ] npx prisma migrate dev
 [ ] npm run dev
-[ ] App opens at localhost:3000
+[ ] App opens at 127.0.0.1:3000
 [ ] Can log in with Spotify
 ```
 
 ---
 
-## ⚡ Super Quick Commands
+## Super Quick Commands
 
 **First time setup:**
 ```bash
@@ -242,15 +245,15 @@ npm run dev
 
 ---
 
-## 🆘 Need More Help?
+## Need More Help?
 
 - **Detailed Guide:** [SETUP_GUIDE.md](./SETUP_GUIDE.md)
+- **Spotify OAuth:** [SPOTIFY_SETUP_GUIDE.md](./SPOTIFY_SETUP_GUIDE.md)
 - **Project Info:** [README.md](./README.md)
-- **Recent Changes:** [CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md)
 
 ---
 
-## 💡 Tips
+## Tips
 
 - **Use cloud database** (Supabase/Neon) to avoid PostgreSQL install
 - **Run setup script** for automatic configuration
@@ -261,9 +264,8 @@ npm run dev
 ---
 
 **Total Setup Time:**
-- First device: ~15-20 minutes
-- Additional devices: ~5-10 minutes  
-- Production deploy: ~10-20 minutes
+- First device: approximately 15-20 minutes
+- Additional devices: approximately 5-10 minutes
+- Production deploy: approximately 10-20 minutes
 
-**You're ready to start collaborating on playlists! 🎵**
-
+**You are ready to start collaborating on playlists.**

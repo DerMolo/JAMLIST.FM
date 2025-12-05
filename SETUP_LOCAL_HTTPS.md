@@ -57,7 +57,7 @@ If Spotify is forcing you to use HTTPS redirect URIs, follow these steps:
 
 3. **Create certificate for localhost:**
    ```bash
-   cd C:\Users\Iampi\OneDrive\Desktop\FinalProjectSpotifyWebApp
+   cd FinalProjectSpotifyWebApp
    mkcert localhost 127.0.0.1 ::1
    ```
 
@@ -124,22 +124,24 @@ If Spotify is forcing you to use HTTPS redirect URIs, follow these steps:
 
 ---
 
-## Option C: Just Use HTTP (If Possible)
+## Option C: Just Use HTTP (Recommended)
 
-If you can, delete the HTTPS URIs from Spotify and try adding HTTP ones again:
+If possible, use HTTP with loopback IP addresses instead:
 
 ```
-http://localhost:3000/api/auth/callback/spotify
-http://localhost:3000/api/user/spotify-callback
+http://127.0.0.1:3000/api/auth/callback/spotify
+http://[::1]:3000/api/auth/callback/spotify
 ```
 
-**This is the simplest and recommended for local development.**
+**This is the simplest and recommended approach for local development.**
+
+Spotify allows HTTP for loopback addresses (`127.0.0.1` and `[::1]`), but NOT for `localhost`. See `SPOTIFY_SETUP_GUIDE.md` for details.
 
 ---
 
 ## Which Option Should You Choose?
 
-1. **Option C** (HTTP) - Try this first! Spotify should allow it.
+1. **Option C** (HTTP with 127.0.0.1) - Try this first. Spotify should allow it.
 2. **Option A** (ngrok) - If you need HTTPS quickly for testing
 3. **Option B** (mkcert) - If you want a permanent local HTTPS setup
 
@@ -156,8 +158,7 @@ http://localhost:3000/api/user/spotify-callback
 - Update your .env each time
 - Or upgrade to ngrok pro for permanent URLs
 
-**Next.js won't start with HTTPS?**
+**Next.js will not start with HTTPS?**
 - Make sure certificate files exist
 - Check file paths in server.js
 - Make sure you installed the dependencies: `npm install https fs`
-

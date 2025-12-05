@@ -15,7 +15,7 @@ NEXTAUTH_URL="http://127.0.0.1:3000"
 NEXTAUTH_SECRET="tQuda4LmCud9aiyimjRMeK/bL6UmeSPGsIuF1mOrkT0="
 JWT_SECRET="mcfkivbLTbBMxwN8SZj92jnudjGh05PA9+2XmaIg100="
 
-# ====================================================================
+# ======================================
 # WHAT TO REPLACE:
 # ====================================================================
 # 1. "your_password" → Your PostgreSQL password

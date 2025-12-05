@@ -1,11 +1,11 @@
 # Complete Spotify OAuth Setup Guide
 
-## 🚨 Current Issues Resolved
+## Current Issues Resolved
 
-1. ✅ Multiple dev servers running (causing port conflicts)
-2. ✅ Spotify redirect URI configuration
-3. ✅ HTTP vs HTTPS for localhost
-4. ✅ OAuth "State cookie missing" errors
+1. Multiple dev servers running (causing port conflicts) - resolved
+2. Spotify redirect URI configuration - resolved
+3. HTTP vs HTTPS for localhost - resolved
+4. OAuth "State cookie missing" errors - resolved
 
 ---
 
@@ -19,7 +19,7 @@
 
 ### Step 2: Set Redirect URIs
 
-**IMPORTANT:** Spotify **DOES** allow `http://` for localhost development!
+**Important:** Spotify allows `http://` for loopback addresses only.
 
 Add these **exact** redirect URIs (case-sensitive, no trailing slash):
 
@@ -28,16 +28,16 @@ http://127.0.0.1:3000/api/auth/callback/spotify
 http://[::1]:3000/api/auth/callback/spotify
 ```
 
-**Important:** As per [Spotify's redirect URI requirements](https://developer.spotify.com/documentation/web-api/concepts/redirect_uri):
-- ✅ Loopback IP literals (`127.0.0.1` or `[::1]`) with HTTP are allowed
-- ❌ `localhost` is **NOT allowed** as a redirect URI
+**Critical Information:** As per [Spotify's redirect URI requirements](https://developer.spotify.com/documentation/web-api/concepts/redirect_uri):
+- Loopback IP literals (`127.0.0.1` or `[::1]`) with HTTP are allowed
+- `localhost` is **NOT allowed** as a redirect URI
 - Both IPv4 and IPv6 loopback addresses are recommended for compatibility
 
 ### Step 3: Save and Wait
 
 1. Click **SAVE** at the bottom
 2. **Wait 1-2 minutes** for changes to propagate
-3. Do NOT close the browser yet - you need your credentials
+3. Do not close the browser yet - you need your credentials
 
 ### Step 4: Copy Your Credentials
 
@@ -50,7 +50,7 @@ http://[::1]:3000/api/auth/callback/spotify
 
 ## Part 2: Environment Configuration
 
-### Step 1: Create/Update .env File
+### Step 1: Create or Update .env File
 
 In your project root, create or update `.env` with:
 
@@ -113,11 +113,11 @@ npm run dev
 
 You should see:
 ```
-▲ Next.js 14.2.33
+Next.js 14.2.33
 - Local:        http://localhost:3000
 - Environments: .env
 
-✓ Ready in XXXms
+Ready in XXXms
 ```
 
 ---
@@ -148,14 +148,14 @@ Or wherever your app redirects after successful login.
 
 ---
 
-## Common Errors & Solutions
+## Common Errors and Solutions
 
 ### Error: "redirect_uri_mismatch"
 
-**Cause:** The URI in Spotify Dashboard doesn't match exactly
+**Cause:** The URI in Spotify Dashboard does not match exactly
 
 **Solution:**
-1. Check Spotify Dashboard → Settings → Redirect URIs
+1. Check Spotify Dashboard, then Settings, then Redirect URIs
 2. Must be EXACTLY: `http://127.0.0.1:3000/api/auth/callback/spotify`
 3. Use `127.0.0.1` NOT `localhost` (Spotify requirement)
 4. No capital letters, no trailing slash, no typos
@@ -165,13 +165,13 @@ Or wherever your app redirects after successful login.
 
 **Causes:**
 1. Multiple dev servers running (port conflicts)
-2. Browser cookies blocked/cleared mid-OAuth
-3. NEXTAUTH_URL doesn't match actual URL
+2. Browser cookies blocked or cleared mid-OAuth
+3. NEXTAUTH_URL does not match actual URL
 
 **Solutions:**
 1. Kill all dev servers, start only ONE
 2. Clear browser cookies for localhost
-3. Try in incognito/private mode
+3. Try in incognito or private mode
 4. Ensure NEXTAUTH_URL="http://127.0.0.1:3000" in .env (NOT localhost)
 
 ### Error: "invalid_client"
@@ -186,7 +186,7 @@ Or wherever your app redirects after successful login.
 
 ### Error: 401/403 from Spotify API
 
-**Cause:** OAuth flow didn't complete successfully
+**Cause:** OAuth flow did not complete successfully
 
 **Solution:**
 1. Sign out completely
@@ -200,12 +200,12 @@ Or wherever your app redirects after successful login.
 As per [Spotify's official documentation](https://developer.spotify.com/documentation/web-api/concepts/redirect_uri):
 
 ### Spotify's Requirements (Enforced April 2025):
-- ✅ **ALLOWS:** `http://127.0.0.1` or `http://[::1]` (loopback IP literals)
-- ❌ **BLOCKS:** `http://localhost` (explicitly not allowed)
-- ❌ **BLOCKS:** `http://` with public domains (e.g., `http://example.com`)
-- ✅ **ALLOWS:** `https://` for any domain (requires SSL certificate)
+- **ALLOWS:** `http://127.0.0.1` or `http://[::1]` (loopback IP literals)
+- **BLOCKS:** `http://localhost` (explicitly not allowed)
+- **BLOCKS:** `http://` with public domains (e.g., `http://example.com`)
+- **ALLOWS:** `https://` for any domain (requires SSL certificate)
 
-**This is why you were blocked!** You were trying to use `localhost` which Spotify no longer permits.
+**This is why `localhost` does not work.** Spotify explicitly prohibits `localhost` as a redirect URI.
 
 ### If You Still Want HTTPS (Optional):
 
@@ -213,7 +213,7 @@ See `SETUP_LOCAL_HTTPS.md` for instructions on:
 - Option A: Using ngrok (tunneling service)
 - Option B: Using mkcert (local SSL certificates)
 
-**For development, HTTP with loopback IPs (127.0.0.1) is the recommended approach!**
+**For development, HTTP with loopback IPs (127.0.0.1) is the recommended approach.**
 
 ---
 
@@ -258,7 +258,7 @@ When you click "Sign In with Spotify", you should be redirected to a URL like:
 https://accounts.spotify.com/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fapi%2Fauth%2Fcallback%2Fspotify&...
 ```
 
-The `redirect_uri` parameter (when URL decoded) should match exactly what's in your Spotify Dashboard.
+The `redirect_uri` parameter (when URL decoded) should match exactly what is in your Spotify Dashboard.
 
 ---
 
@@ -299,5 +299,4 @@ The key points:
 5. **Wait after saving** in Spotify Dashboard - changes take 1-2 minutes
 6. **Access via `http://127.0.0.1:3000`** - not localhost, not https
 
-Follow this guide step-by-step and your Spotify OAuth should work perfectly! 🎵
-
+Follow this guide step-by-step and your Spotify OAuth should work correctly.
